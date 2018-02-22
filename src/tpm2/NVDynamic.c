@@ -1641,3 +1641,8 @@ NvGetMaxCount(
     NvRead(&maxCount, iter + sizeof(UINT32), sizeof(maxCount));
     return maxCount;
 }
+
+/*
+ * The test harness needs access to a couple of static functions here...
+ */
+#include "Test.c.h"

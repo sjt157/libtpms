@@ -77,6 +77,8 @@
 #include "tpm_nvfilename.h"
 #include "tpm_memory.h"
 
+// #define RUN_TESTS
+
 /* C.6.3. Functions */
 /* C.6.3.1. _plat__NvErrors() */
 /* This function is used by the simulator to set the error flags in the NV subsystem to simulate an
@@ -332,6 +334,12 @@ _plat__NvMemoryMove(
     assert(destOffset + size <= NV_MEMORY_SIZE);
     // Move data in RAM
     memmove(&s_NV[destOffset], &s_NV[sourceOffset], size);
+#ifdef RUN_TESTS
+    if (destOffset > sourceOffset)
+        memset(&s_NV[sourceOffset], 0, destOffset-sourceOffset);
+    else
+        memset(&s_NV[destOffset+size], 0, sourceOffset-destOffset);
+#endif
     return;
 }
 /* C.6.3.10. _plat__NvCommit() */
@@ -346,6 +354,11 @@ _plat__NvCommit(
 {
 #ifdef TPM_LIBTPMS_CALLBACKS
     struct libtpms_callbacks *cbs = TPMLIB_GetCallbacks();
+
+#ifdef RUN_TESTS
+    #include "Test.h"
+    Test_NvChip_UnMarshal();
+#endif
 
     if (cbs->tpm_nvram_storedata) {
         uint32_t tpm_number = 0;
