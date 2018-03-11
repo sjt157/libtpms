@@ -64,6 +64,7 @@
 
 #ifdef TPM_LIBTPMS_CALLBACKS
 #include "tpm_library_intern.h"
+#include "tpm_library.h"
 #endif
 
 
@@ -162,7 +163,14 @@ TPM_RESULT TPM_NVRAM_LoadData(unsigned char **data,     /* freed by caller */
     char        filename[FILENAME_MAX]; /* rooted file name from name */
 
 #ifdef TPM_LIBTPMS_CALLBACKS
-    struct libtpms_callbacks *cbs = TPMLIB_GetCallbacks();
+    struct libtpms_callbacks *cbs;
+
+    /* try to get state blob set with TPMLIB_SetState() */
+    GetCachedState(TPMLIB_NameToStateType(name), data, length);
+    if (data)
+        return TPM_SUCCESS;
+
+    cbs = TPMLIB_GetCallbacks();
 
     /* call user-provided function if available, otherwise execute
        default behavior */
