@@ -107,5 +107,6 @@ TPM_RESULT TPM2_IO_TpmEstablished_Get(TPM_BOOL *tpmEstablished);
 TPM_RESULT TPM2_IO_TpmEstablished_Reset(void);
 
 uint32_t TPM2_GetBufferSize(void);
+TPM_RESULT TPM2_PersistentAllStore(unsigned char **buf, uint32_t *buflen);
 
 #endif /* TPM_LIBRARY_INTERN_H */
